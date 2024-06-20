@@ -1,0 +1,81 @@
+{% load static %}
+{% csrf_token %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HOME WORK</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body>
+    <div class="container mt-5">
+        {% if messages %}
+        <div class="alert alert-warning" role="alert">
+            {% for message in messages %}
+            {{ message }}
+            {% endfor %}
+        </div>
+        {% endif %}
+        <div class="card shadow-sm">
+            <div class="card-header bg-primary text-white">
+                <h2>Information Retrieval Homework</h2>
+            </div>
+            <div class="card-body">
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <input type="text" class="form-control" name="search-input" placeholder="Enter Your Text">
+                    </div>
+                    <div class="mb-3">
+                        <label for="inputGroupSelect01" class="form-label">Choose Model</label>
+                        <select class="form-select" id="inputGroupSelect01" name="select-option">
+                            <option selected>Choose...</option>
+                            <option value="Boolean Model">Boolean Model</option>
+                            <option value="Vector Model">Vector Model</option>
+                            <option value="Extended Boolean">Extended Boolean</option>
+                        </select>
+                    </div>
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-primary" name="btn2">Search</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        {% if search_results %}
+        <div class="card mt-4 shadow-sm">
+            <div class="card-header bg-secondary text-white">
+                <h3>Resources</h3>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Search Result</th>
+                                <th>Rank</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for filename, snippet in search_results %}
+                            <tr>
+                                <td><a href="{% url 'read' filename %}">{{ filename }}</a></td>
+                                <td>{{ forloop.counter }}</td>
+                                <td>{{ snippet | safe }}</td> <!-- Ensure safe filter is used to render HTML -->
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{% static 'js/script.js' %}"></script>
+</body>
+
+</html>
